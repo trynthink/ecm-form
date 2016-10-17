@@ -8,6 +8,7 @@ $(document).ready(function(){
     // Update performance fields when the selections change (the function
     // takes care of whether the update is needed)
     cplFieldGenerator($("input[name=perf-spec-type]:checked").val(), "#perf-spec", "perf");
+    updateSourceFields();
   });
 
   // Listeners for residential and commercial building type selections
@@ -18,6 +19,7 @@ $(document).ready(function(){
     // Update performance fields when the selections change (the function
     // takes care of whether the update is needed)
     cplFieldGenerator($("input[name=perf-spec-type]:checked").val(), "#perf-spec", "perf");
+    updateSourceFields();
   });
 
   var com_sel = [];
@@ -27,6 +29,7 @@ $(document).ready(function(){
     // Update performance fields when the selections change (the function
     // takes care of whether the update is needed)
     cplFieldGenerator($("input[name=perf-spec-type]:checked").val(), "#perf-spec", "perf");
+    updateSourceFields();
   });
 
 
@@ -108,7 +111,7 @@ $(document).ready(function(){
     // Update contents of DOM in the appropriate field based on the selection
     if (spec_type === "spec-by-cz") {
       // Clear contents of field
-      $("#perf-spec").empty();
+      $(location_id).empty();
 
       // Check for selection of climate zones
       if (cz_sel.length === 0) { $(location_id).append("Please select at least one climate zone. "); }
@@ -116,7 +119,7 @@ $(document).ready(function(){
     }
     else if (spec_type === "spec-by-bldg") {
       // Clear contents of field
-      $("#perf-spec").empty();
+      $(location_id).empty();
 
       // Check for selection of building types
       if (bldg_sel.length === 0) { $(location_id).append("Please select at least one building type. "); }
@@ -124,7 +127,7 @@ $(document).ready(function(){
     }
     else if (spec_type === "spec-by-cz-bldg") {
       // Clear contents of field
-      $("#perf-spec").empty();
+      $(location_id).empty();
 
       // Check for selections of building types and climate zones
       if (cz_sel.length === 0) { $(location_id).append("Please select at least one climate zone. "); watcher = true; }
@@ -155,6 +158,7 @@ $(document).ready(function(){
   $("#perf-spec").append(perf_unitary);
 
   // Update performance field based on climate zone and building type selection
+  // Update performance source field if appropriate
   $("input[name=perf-spec-type]").change(function(){
     // Obtain the performance type specified
     var perf_spec_type = $("input[name=perf-spec-type]:checked").val();
@@ -172,6 +176,9 @@ $(document).ready(function(){
     else {
       cplFieldGenerator(perf_spec_type, "#perf-spec", "perf");
     }
+
+    // Update performance source data field
+    updateSourceFields();
   });
 
   ///////////////////////////////////////////////////////////////////////////
@@ -198,11 +205,11 @@ $(document).ready(function(){
     }
     else if (perf_distro_type === "gamma") {
       var p1name = "Shape (k)";
-      var p2name = "Scale (&#952;)";
+      var p2name = "Scale (&#952;)"; // theta
     }
     else if (perf_distro_type === "weibull") {
       var p1name = "Shape (k)";
-      var p2name = "Scale (&#955;)";
+      var p2name = "Scale (&#955;)"; // lambda
     }
     else { // triangular
       var p1name = "Lower limit";
@@ -237,24 +244,33 @@ $(document).ready(function(){
 
   // If selection option is changed, check for selection option and
   // update the HTML appropriately
-  $("input[name=perf-source-type]").change(function() {
+  $("input[name=perf-source-type]").change(function(){ updateSourceFields(); });
+
+  // Update performance source fields dynamically based on other selections
+  function updateSourceFields() {
     // Obtain the performance source specification selected
     var perf_source_type = $("input[name=perf-source-type]:checked").val();
+
+    // Obtain the performance type specified
+    var perf_spec_type = $("input[name=perf-spec-type]:checked").val();
 
     // Clear contents of performance source area in DOM
     $("#perf-source").empty();
 
-    // Add appropriate content
+    // Add appropriate content based on wether that content 
     if (perf_source_type === "single") {
-    	$("#perf-source").append(single_source);
+      $("#perf-source").append(single_source);
     }
     else {
-    	// HAVE TO FIGURE OUT PERF SPEC TYPE AND THEN ACT ACCORDINGLY
-    	// $("#perf-source").append();
+      // Update contents of DOM in the appropriate field based on the selection
+      if (perf_spec_type === "spec-unitary" || perf_spec_type === "spec-by-prob"){
+        $("#perf-source").append(single_source);
+      }
+      else {
+        cplFieldGenerator(perf_spec_type, "#perf-source", "perf-src");
+      }
     }
-  });
-
-
+  }
 
   ///////////////////////////////////////////////////////////////////////////
   // AUTOMATIC UNITS
