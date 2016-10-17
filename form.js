@@ -3,21 +3,33 @@ $(document).ready(function(){
   // Listener for climate zone selections
   var cz_sel = [];
   $("input[name=cz]").on("click", function() {
-    cz_sel = checkedList("cz"); 
-    updateClimateZoneFields();
+    cz_sel = checkedList("cz");
+
+    // Update performance fields when the selections change (the function
+    // takes care of whether the update is needed)
+    cplFieldGenerator($("input[name=perf-spec-type]:checked").val(), "#perf-spec", "perf");
   });
 
   // Listeners for residential and commercial building type selections
   var res_sel = [];
   $("input[name=res-type]").on("click", function() {
     res_sel = checkedList("res-type");
-    updateBldgTypeFields();
+
+    // Update performance fields when the selections change (the function
+    // takes care of whether the update is needed)
+    cplFieldGenerator($("input[name=perf-spec-type]:checked").val(), "#perf-spec", "perf");
   });
+
   var com_sel = [];
   $("input[name=com-type]").on("click", function() {
     com_sel = checkedList("com-type");
-    updateBldgTypeFields();
+
+    // Update performance fields when the selections change (the function
+    // takes care of whether the update is needed)
+    cplFieldGenerator($("input[name=perf-spec-type]:checked").val(), "#perf-spec", "perf");
   });
+
+
 
   ///////////////////////////////////////////////////////////////////////////
   // GENERAL FUNCTIONS
@@ -79,6 +91,53 @@ $(document).ready(function(){
 
 
   ///////////////////////////////////////////////////////////////////////////
+  // CPL-SPECIFIC FUNCTIONS
+  ///////////////////////////////////////////////////////////////////////////
+
+  // Generate fields for user input based on selected cost, performance, or
+  // lifetime specification type and, if appropriate, additional user inputs
+  // such as climate zones and building types
+  function cplFieldGenerator(spec_type, location_id, field_type) {
+    // Variable that indicates whether either climate zone or building type
+    // selections have been made
+    var watcher = false;
+
+    // Create concatenated list of building types
+    var bldg_sel = res_sel.concat(com_sel);
+    
+    // Update contents of DOM in the appropriate field based on the selection
+    if (spec_type === "spec-by-cz") {
+      // Clear contents of field
+      $("#perf-spec").empty();
+
+      // Check for selection of climate zones
+      if (cz_sel.length === 0) { $(location_id).append("Please select at least one climate zone. "); }
+      else { $(location_id).append(buildList(cz_sel, field_type + "-cz")); }
+    }
+    else if (spec_type === "spec-by-bldg") {
+      // Clear contents of field
+      $("#perf-spec").empty();
+
+      // Check for selection of building types
+      if (bldg_sel.length === 0) { $(location_id).append("Please select at least one building type. "); }
+      else { $(location_id).append(buildList(bldg_sel, field_type + "-bldg")); }
+    }
+    else if (spec_type === "spec-by-cz-bldg") {
+      // Clear contents of field
+      $("#perf-spec").empty();
+
+      // Check for selections of building types and climate zones
+      if (cz_sel.length === 0) { $(location_id).append("Please select at least one climate zone. "); watcher = true; }
+      if (bldg_sel.length === 0) { $(location_id).append("Please select at least one building type. "); watcher = true; }
+
+      // Step is suppressed by watcher variable
+      if (watcher === false) { $(location_id).append(buildTable(bldg_sel, cz_sel, field_type + "-bldg-cz")); }
+    }
+  }
+
+
+
+  ///////////////////////////////////////////////////////////////////////////
   // PERFORMANCE
   ///////////////////////////////////////////////////////////////////////////
 
@@ -100,101 +159,20 @@ $(document).ready(function(){
     // Obtain the performance type specified
     var perf_spec_type = $("input[name=perf-spec-type]:checked").val();
 
-    // Create concatenated list of building types
-    var bldg_sel = res_sel.concat(com_sel);
-
     // Clear contents of field
     $("#perf-spec").empty();
-
-    // Initialize watcher variable (checks for both climate zone and
-    // building type selections for the combined case)
-    var watcher = false;
 
     // Update contents of DOM in the appropriate field based on the selection
     if (perf_spec_type === "spec-unitary"){
       $("#perf-spec").append(perf_unitary);
     }
-    else if (perf_spec_type === "spec-by-cz") {
-      // Check for selection of climate zones
-      if (cz_sel.length === 0) { $("#perf-spec").append("Please select at least one climate zone. "); }
-      else { $("#perf-spec").append(buildList(cz_sel, "perf-cz")); }
-    }
-    else if (perf_spec_type === "spec-by-bldg") {
-      // Check for selection of building types
-      if (bldg_sel.length === 0) { $("#perf-spec").append("Please select at least one building type. "); }
-      else { $("#perf-spec").append(buildList(bldg_sel, "perf-bldg")); }
-    }
-    else if (perf_spec_type === "spec-by-cz-bldg") {
-      // Check for selections of building types and climate zones
-      if (cz_sel.length === 0) { $("#perf-spec").append("Please select at least one climate zone. "); watcher = true; }
-      if (bldg_sel.length === 0) { $("#perf-spec").append("Please select at least one building type. "); watcher = true; }
-
-      // Step is suppressed by watcher variable
-      if (watcher === false) { $("#perf-spec").append(buildTable(bldg_sel, cz_sel, "perf-bldg-cz")); }
-    }
-    else {
+    else if (perf_spec_type === "spec-by-prob") {
       $("#perf-spec").append(prob_select);
     }
+    else {
+      cplFieldGenerator(perf_spec_type, "#perf-spec", "perf");
+    }
   });
-
-  ///////////////////////////////////////////////////////////////////////////
-
-  // Update performance field as appropriate if the climate zone selection
-  // or building type selection is changed and that radio option is chosen
-
-  // Check and update performance field as appropriate if a change occurs
-  // in the climate zones selected and a climate zone-dependent specification
-  // option has been selected
-  function updateClimateZoneFields() {
-    // Obtain the performance type specified
-    var perf_spec_type = $("input[name=perf-spec-type]:checked").val();
-    var watcher = false;
-    // Create concatenated list of building types
-    var bldg_sel = res_sel.concat(com_sel);
-
-    if (perf_spec_type === "spec-by-cz") {
-      // Clear contents of field
-      $("#perf-spec").empty();
-      // Check for selection of climate zones
-      if (cz_sel.length === 0) { $("#perf-spec").append("Please select at least one climate zone. "); }
-      else { $("#perf-spec").append(buildList(cz_sel, "perf-cz")); }
-    }
-    else if (perf_spec_type === "spec-by-cz-bldg") {
-      // Clear contents of field
-      $("#perf-spec").empty();
-      // Check for selections of building types and climate zones
-      if (cz_sel.length === 0) { $("#perf-spec").append("Please select at least one climate zone. "); watcher = true; }
-      if (bldg_sel.length === 0) { $("#perf-spec").append("Please select at least one building type. "); watcher = true; }
-      // Step is suppressed by watcher variable
-      if (watcher === false) { $("#perf-spec").append(buildTable(bldg_sel, cz_sel, "perf-bldg-cz")); }
-    }
-  }
-
-  // Same as above function but for building type selections
-  function updateBldgTypeFields() {
-    // Obtain the performance type specified
-    var perf_spec_type = $("input[name=perf-spec-type]:checked").val();
-    var watcher = false;
-    // Create concatenated list of building types
-    var bldg_sel = res_sel.concat(com_sel);
-
-    if (perf_spec_type === "spec-by-bldg") {
-      // Clear contents of field
-      $("#perf-spec").empty();
-      // Check for selection of building types
-      if (bldg_sel.length === 0) { $("#perf-spec").append("Please select at least one building type. "); }
-      else { $("#perf-spec").append(buildList(bldg_sel, "perf-bldg")); }
-    }
-    else if (perf_spec_type === "spec-by-cz-bldg") {
-      // Clear contents of field
-      $("#perf-spec").empty();
-      // Check for selections of building types and climate zones
-      if (cz_sel.length === 0) { $("#perf-spec").append("Please select at least one climate zone. "); watcher = true; }
-      if (bldg_sel.length === 0) { $("#perf-spec").append("Please select at least one building type. "); watcher = true; }
-      // Step is suppressed by watcher variable
-      if (watcher === false) { $("#perf-spec").append(buildTable(bldg_sel, cz_sel, "perf-bldg-cz")); }
-    }
-  }
 
   ///////////////////////////////////////////////////////////////////////////
 
