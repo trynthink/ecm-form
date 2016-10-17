@@ -8,7 +8,7 @@ $(document).ready(function(){
     // Update performance fields when the selections change (the function
     // takes care of whether the update is needed)
     cplFieldGenerator($("input[name=perf-spec-type]:checked").val(), "#perf-spec", "perf");
-    updateSourceFields();
+    updateSourceFields("#perf-source", "perf");
   });
 
   // Listeners for residential and commercial building type selections
@@ -19,7 +19,7 @@ $(document).ready(function(){
     // Update performance fields when the selections change (the function
     // takes care of whether the update is needed)
     cplFieldGenerator($("input[name=perf-spec-type]:checked").val(), "#perf-spec", "perf");
-    updateSourceFields();
+    updateSourceFields("#perf-source", "perf");
   });
 
   var com_sel = [];
@@ -29,7 +29,7 @@ $(document).ready(function(){
     // Update performance fields when the selections change (the function
     // takes care of whether the update is needed)
     cplFieldGenerator($("input[name=perf-spec-type]:checked").val(), "#perf-spec", "perf");
-    updateSourceFields();
+    updateSourceFields("#perf-source", "perf");
   });
 
 
@@ -138,6 +138,32 @@ $(document).ready(function(){
     }
   }
 
+  // Update performance source fields dynamically based on other selections
+  function updateSourceFields(location_id, field_type) {
+    // Obtain the performance source specification selected
+    var source_type = $("input[name=" + field_type + "-source-type]:checked").val();
+
+    // Obtain the performance type specified
+    var spec_type = $("input[name=" + field_type + "-spec-type]:checked").val();
+
+    // Clear contents of performance source area in DOM
+    $(location_id).empty();
+
+    // Add appropriate content based on wether that content 
+    if (source_type === "single") {
+      $(location_id).append(single_source);
+    }
+    else {
+      // Update contents of DOM in the appropriate field based on the selection
+      if (spec_type === "spec-unitary" || spec_type === "spec-by-prob"){
+        $(location_id).append(single_source);
+      }
+      else {
+        cplFieldGenerator(spec_type, location_id, field_type + "-src");
+      }
+    }
+  }
+
 
 
   ///////////////////////////////////////////////////////////////////////////
@@ -178,7 +204,7 @@ $(document).ready(function(){
     }
 
     // Update performance source data field
-    updateSourceFields();
+    updateSourceFields("#perf-source", "perf");
   });
 
   ///////////////////////////////////////////////////////////////////////////
@@ -244,33 +270,9 @@ $(document).ready(function(){
 
   // If selection option is changed, check for selection option and
   // update the HTML appropriately
-  $("input[name=perf-source-type]").change(function(){ updateSourceFields(); });
+  $("input[name=perf-source-type]").change(function(){ updateSourceFields("#perf-source", "perf"); });
 
-  // Update performance source fields dynamically based on other selections
-  function updateSourceFields() {
-    // Obtain the performance source specification selected
-    var perf_source_type = $("input[name=perf-source-type]:checked").val();
 
-    // Obtain the performance type specified
-    var perf_spec_type = $("input[name=perf-spec-type]:checked").val();
-
-    // Clear contents of performance source area in DOM
-    $("#perf-source").empty();
-
-    // Add appropriate content based on wether that content 
-    if (perf_source_type === "single") {
-      $("#perf-source").append(single_source);
-    }
-    else {
-      // Update contents of DOM in the appropriate field based on the selection
-      if (perf_spec_type === "spec-unitary" || perf_spec_type === "spec-by-prob"){
-        $("#perf-source").append(single_source);
-      }
-      else {
-        cplFieldGenerator(perf_spec_type, "#perf-source", "perf-src");
-      }
-    }
-  }
 
   ///////////////////////////////////////////////////////////////////////////
   // AUTOMATIC UNITS
