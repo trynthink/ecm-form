@@ -7,7 +7,7 @@ $(document).ready(function(){
 
     // Update performance fields when the selections change (the function
     // takes care of whether the update is needed)
-    cplFieldGenerator($("input[name=perf-spec-type]:checked").val(), "#perf-spec", "perf");
+    cplFieldGenerator($("input[name=perf-spec-type]:checked").val(), "#perf-spec", "perf", "number");
     updateSourceFields("#perf-source", "perf");
   });
 
@@ -18,7 +18,7 @@ $(document).ready(function(){
 
     // Update performance fields when the selections change (the function
     // takes care of whether the update is needed)
-    cplFieldGenerator($("input[name=perf-spec-type]:checked").val(), "#perf-spec", "perf");
+    cplFieldGenerator($("input[name=perf-spec-type]:checked").val(), "#perf-spec", "perf", "number");
     updateSourceFields("#perf-source", "perf");
   });
 
@@ -28,7 +28,7 @@ $(document).ready(function(){
 
     // Update performance fields when the selections change (the function
     // takes care of whether the update is needed)
-    cplFieldGenerator($("input[name=perf-spec-type]:checked").val(), "#perf-spec", "perf");
+    cplFieldGenerator($("input[name=perf-spec-type]:checked").val(), "#perf-spec", "perf", "number");
     updateSourceFields("#perf-source", "perf");
   });
 
@@ -59,16 +59,16 @@ $(document).ready(function(){
 
   // Build list of numeric fields with labels based on entries (strings)
   // passed to function
-  function buildList(entries, field_name) {
+  function buildList(entries, field_name, field_type) {
     var add_to_dom = "";
     for (i = 0; i < entries.length; i++) {
-      add_to_dom += entries[i].capitalizeFirstLetter() + "<input type='number' class='sm-text-input' name='" + field_name + "' value='" + entries[i] + "'>";
+      add_to_dom += entries[i].capitalizeFirstLetter() + "<input type='" + field_type + "' class='sm-text-input' name='" + field_name + "' value='" + entries[i] + "'>";
     }
     return add_to_dom;
   }
 
   // Build table based on lists of strings passed to function
-  function buildTable(rows, columns, field_name) {
+  function buildTable(rows, columns, field_name, field_type) {
     var add_to_dom = "<table>";
 
     // Header row
@@ -82,7 +82,7 @@ $(document).ready(function(){
       add_to_dom += "<tr><td>" + rows[i].capitalizeFirstLetter() + "</td>";
       // Columns
       for (j = 0; j < columns.length; j++) {
-        add_to_dom += "<td><input type='number' class='sm-text-input' name='" + rows[i] + "-" + columns[j] + "'></td>";
+        add_to_dom += "<td><input type='" + field_type + "' class='sm-text-input' name='" + rows[i] + "-" + columns[j] + "'></td>";
       }
       add_to_dom += "</tr>";
     }
@@ -100,7 +100,7 @@ $(document).ready(function(){
   // Generate fields for user input based on selected cost, performance, or
   // lifetime specification type and, if appropriate, additional user inputs
   // such as climate zones and building types
-  function cplFieldGenerator(spec_type, location_id, field_type) {
+  function cplFieldGenerator(spec_type, location_id, field_class, field_type) {
     // Variable that indicates whether either climate zone or building type
     // selections have been made
     var watcher = false;
@@ -115,7 +115,7 @@ $(document).ready(function(){
 
       // Check for selection of climate zones
       if (cz_sel.length === 0) { $(location_id).append("Please select at least one climate zone. "); }
-      else { $(location_id).append(buildList(cz_sel, field_type + "-cz")); }
+      else { $(location_id).append(buildList(cz_sel, field_class + "-cz", field_type)); }
     }
     else if (spec_type === "spec-by-bldg") {
       // Clear contents of field
@@ -123,7 +123,7 @@ $(document).ready(function(){
 
       // Check for selection of building types
       if (bldg_sel.length === 0) { $(location_id).append("Please select at least one building type. "); }
-      else { $(location_id).append(buildList(bldg_sel, field_type + "-bldg")); }
+      else { $(location_id).append(buildList(bldg_sel, field_class + "-bldg", field_type)); }
     }
     else if (spec_type === "spec-by-cz-bldg") {
       // Clear contents of field
@@ -134,19 +134,19 @@ $(document).ready(function(){
       if (bldg_sel.length === 0) { $(location_id).append("Please select at least one building type. "); watcher = true; }
 
       // Step is suppressed by watcher variable
-      if (watcher === false) { $(location_id).append(buildTable(bldg_sel, cz_sel, field_type + "-bldg-cz")); }
+      if (watcher === false) { $(location_id).append(buildTable(bldg_sel, cz_sel, field_class + "-bldg-cz", field_type)); }
     }
   }
 
-  // Update performance source fields dynamically based on other selections
-  function updateSourceFields(location_id, field_type) {
-    // Obtain the performance source specification selected
-    var source_type = $("input[name=" + field_type + "-source-type]:checked").val();
+  // Update source fields dynamically based on other selections
+  function updateSourceFields(location_id, field_class) {
+    // Obtain the source specification option selected
+    var source_type = $("input[name=" + field_class + "-source-type]:checked").val();
 
-    // Obtain the performance type specified
-    var spec_type = $("input[name=" + field_type + "-spec-type]:checked").val();
+    // Obtain the data specification type specified
+    var spec_type = $("input[name=" + field_class + "-spec-type]:checked").val();
 
-    // Clear contents of performance source area in DOM
+    // Clear contents of applicable source area in DOM
     $(location_id).empty();
 
     // Add appropriate content based on wether that content 
@@ -159,7 +159,7 @@ $(document).ready(function(){
         $(location_id).append(single_source);
       }
       else {
-        cplFieldGenerator(spec_type, location_id, field_type + "-src");
+        cplFieldGenerator(spec_type, location_id, field_class + "-src", "text");
       }
     }
   }
@@ -200,7 +200,7 @@ $(document).ready(function(){
       $("#perf-spec").append(prob_select);
     }
     else {
-      cplFieldGenerator(perf_spec_type, "#perf-spec", "perf");
+      cplFieldGenerator(perf_spec_type, "#perf-spec", "perf", "number");
     }
 
     // Update performance source data field
