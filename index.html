@@ -1,0 +1,115 @@
+<html>
+  <head>
+    <script src="http://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css" media="screen" />
+    <script type='text/javascript' src='form.js'></script>
+  </head>
+  <body>
+
+    <form id='ECM-submission-form'>
+      <div>
+        <label>Name <input type='text' name='ECM-name'></label>
+      </div>
+      <div>
+        <label>Description 
+          <textarea name='ECM-description' placeholder='Provide a one or two sentence description of the ECM.'></textarea>
+        </label>
+      </div>
+      <div>
+        <label>Market Definition</label>
+        <div><label>Climate Zone</label>
+          <label><input type='checkbox' name='cz' value='hot-humid'> Hot-humid </label>
+          <label><input type='checkbox' name='cz' value='mixed-humid'> Mixed-humid </label>
+          <label><input type='checkbox' name='cz' value='hot-dry'> Hot-dry </label>
+          <label><input type='checkbox' name='cz' value='mixed-dry'> Mixed-dry </label>
+          <label><input type='checkbox' name='cz' value='marine'> Marine </label>
+          <label><input type='checkbox' name='cz' value='cold'> Cold </label>
+          <label><input type='checkbox' name='cz' value='very cold'> Very cold </label>
+          <label><input type='checkbox' name='cz' value='subarctic'> Subarctic </label>
+        </div>
+        <div><label>Building Type</label>
+          <div><label>Residential</label>
+            <label><input type='checkbox' name='res-type' value='single-family homes'> Single-family homes </label>
+            <label><input type='checkbox' name='res-type' value='multi-family homes'> Multi-family homes </label>
+            <label><input type='checkbox' name='res-type' value='mobile homes'> Mobile homes </label>
+          </div>
+          <div><label>Commercial</label>
+            <label><input type='checkbox' name='com-type' value='assembly'> Assembly </label>
+            <label><input type='checkbox' name='com-type' value='education'> Education </label>
+            <label><input type='checkbox' name='com-type' value='food sales'> Food sales </label>
+            <label><input type='checkbox' name='com-type' value='food service'> Food service </label>
+            <label><input type='checkbox' name='com-type' value='health care'> Health care </label>
+            <label><input type='checkbox' name='com-type' value='lodging'> Lodging </label>
+            <label><input type='checkbox' name='com-type' value='mercantile/service'> Mercantile/service </label>
+            <label><input type='checkbox' name='com-type' value='other'> Other </label>
+            <label><input type='checkbox' name='com-type' value='small office'> Small office </label>
+            <label><input type='checkbox' name='com-type' value='large office'> Large office </label>
+            <label><input type='checkbox' name='com-type' value='warehouse'> Warehouse </label>
+          </div>
+        </div>
+        <div><label>Building Vintage</label>
+          <label><input type='checkbox' name='vintage' value='new'> New </label>
+          <label><input type='checkbox' name='vintage' value='existing'> Existing </label>
+        </div>
+        <div><label>End Use</label>
+        </div>
+      </div>
+
+      <div>
+        <label>Performance</label>
+        <div id='perf-spec-radio'>
+          <label><input type=radio name='perf-spec-type' value='spec-unitary'> Single Value </label>
+          <label><input type=radio name='perf-spec-type' value='spec-by-cz'> By Climate Zone </label>
+          <label><input type=radio name='perf-spec-type' value='spec-by-bldg'> By Building Type </label>
+          <label><input type=radio name='perf-spec-type' value='spec-by-cz-bldg'> By Climate Zone and Building Type </label>
+          <label><input type=radio name='perf-spec-type' value='spec-by-prob'> With A Probability Distribution </label>
+        </div>
+        <div id='perf-spec'>
+        </div>
+        <div id='perf-units'>
+        </div>
+        <label>Data Sources</label>
+        <div id='perf-source-radio'>
+          <label><input type=radio name='perf-source-type' value='single'> Single Source </label>
+          <label><input type=radio name='perf-source-type' value='replicate'> Same Structure as Values </label>
+        </div>
+        <div id='perf-source'>
+        </div>
+      </div>
+
+<!--       <div><label>Installed Cost</label>
+        <div id='cost-spec-radio'>
+          <label><input type=radio name='cost-spec-type' value='spec-unitary'> Single Value </label>
+          <label><input type=radio name='cost-spec-type' value='spec-by-cz'> By Climate Zone </label>
+          <label><input type=radio name='cost-spec-type' value='spec-by-bldg'> By Building Type </label>
+          <label><input type=radio name='cost-spec-type' value='spec-by-cz-bldg'> By Climate Zone and Building Type </label>
+          <label><input type=radio name='cost-spec-type' value='spec-by-prob'> With A Probability Distribution </label>
+        </div>
+        <div id='cost-spec'>
+        </div>
+        <div id='cost-units'>
+        </div>
+        <div id='cost-source'>
+        </div>
+      </div>
+
+      <div><label>Lifetime</label>
+        <div id='life-spec-radio'>
+          <label><input type=radio name='life-spec-type' value='spec-unitary'> Single Value </label>
+          <label><input type=radio name='life-spec-type' value='spec-by-cz'> By Climate Zone </label>
+          <label><input type=radio name='life-spec-type' value='spec-by-bldg'> By Building Type </label>
+          <label><input type=radio name='life-spec-type' value='spec-by-cz-bldg'> By Climate Zone and Building Type </label>
+          <label><input type=radio name='life-spec-type' value='spec-by-prob'> With A Probability Distribution </label>
+        </div>
+        <div id='life-spec'>
+        </div>
+        <div id='life-units'>
+        </div>
+        <div id='life-source'>
+        </div>
+      </div> -->
+
+    </form>
+
+  </body>
+</html>
