@@ -361,6 +361,26 @@ $(document).ready(function(){
 
 
   ///////////////////////////////////////////////////////////////////////////
+  // FUEL SWITCHING
+  ///////////////////////////////////////////////////////////////////////////
+
+  // HTML to ad to DOM to insert ECM fuel type dropdown
+  var ecm_fuel_dropdown = "<label>ECM Fuel Type</label><select name='ecm-fuel-type'><option selected disabled hidden style='display: none' value=''>Fuel Type Options</option><option value='electricity'>Electricity</option><option value='natural-gas'>Natural Gas</option><option value='distillate'>Distillate</option></select>";
+
+  // When there is a change to the fuel switching option selected, update
+  // the DOM to include the ECM fuel type selection field, if appropriate
+  $("input[name=fuel-switching]").change(function(){
+    // Clear contents of the area with the fuel type dropdown
+    $("#ecm-fuel-type").empty();
+
+    // If fuel switching is chosen, add the ECM fuel type dropdown
+    if ($("input[name=fuel-switching]:checked").val() === 'yes-fuel-switch') {
+      $("#ecm-fuel-type").append(ecm_fuel_dropdown);
+    }
+  });
+
+
+  ///////////////////////////////////////////////////////////////////////////
   // AUTOMATIC UNITS
   ///////////////////////////////////////////////////////////////////////////
 

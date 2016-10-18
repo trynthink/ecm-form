@@ -8,11 +8,11 @@
 
     <form id='ECM-submission-form'>
       <div>
-        <label>Name <input type='text' name='ECM-name'></label>
+        <label>Name <input type='text' name='ecm-name'></label>
       </div>
       <div>
         <label>Description 
-          <textarea name='ECM-description' placeholder='Provide a one or two sentence description of the ECM.'></textarea>
+          <textarea name='ecm-description' placeholder='Provide a one or two sentence description of the ECM.'></textarea>
         </label>
       </div>
       <div>
@@ -55,14 +55,25 @@
         </div>
       </div>
 
+      <hr> <!-- horizontal rule -->
+
+      <div><label>Market Entry Year <input type='number' name='market-entry-year' min='2000' max='2050' value='2009'></label></div>
+      <div><label>Market Exit Year <input type='number' name='market-exit-year' min='2000' max='2050' value='2040'></label></div>
+      <div><label>ECM Type</label>
+        <div>
+          <label><input type='radio' name='ecm-type' value='tech-replacement' checked> 1:1 Technology Replacement </label>
+          <label><input type='radio' name='ecm-type' value='tech-add-on'> Augments Existing Technology </label>
+        </div>
+      </div>
+
       <div>
         <label>Performance</label>
         <div id='perf-spec-radio'>
-          <label><input type=radio name='perf-spec-type' value='spec-unitary'> Single Value </label>
-          <label><input type=radio name='perf-spec-type' value='spec-by-cz'> By Climate Zone </label>
-          <label><input type=radio name='perf-spec-type' value='spec-by-bldg'> By Building Type </label>
-          <label><input type=radio name='perf-spec-type' value='spec-by-cz-bldg'> By Climate Zone and Building Type </label>
-          <label><input type=radio name='perf-spec-type' value='spec-by-prob'> With A Probability Distribution </label>
+          <label><input type='radio' name='perf-spec-type' value='spec-unitary'> Single Value </label>
+          <label><input type='radio' name='perf-spec-type' value='spec-by-cz'> By Climate Zone </label>
+          <label><input type='radio' name='perf-spec-type' value='spec-by-bldg'> By Building Type </label>
+          <label><input type='radio' name='perf-spec-type' value='spec-by-cz-bldg'> By Climate Zone and Building Type </label>
+          <label><input type='radio' name='perf-spec-type' value='spec-by-prob'> With A Probability Distribution </label>
         </div>
         <div id='perf-spec'>
         </div>
@@ -70,8 +81,8 @@
         </div>
         <label>Data Sources</label>
         <div id='perf-source-radio'>
-          <label><input type=radio name='perf-source-type' value='single'> Single Source </label>
-          <label><input type=radio name='perf-source-type' value='replicate'> Same Structure as Values </label>
+          <label><input type='radio' name='perf-source-type' value='single'> Single Source </label>
+          <label><input type='radio' name='perf-source-type' value='replicate'> Same Structure as Values </label>
         </div>
         <div id='perf-source'>
         </div>
@@ -110,6 +121,21 @@
         </div>
         <div id='life-source'>
         </div>
+      </div>
+
+      <div><label>Fuel Switching</label>
+        <div id='fuel-switching-radio'>
+          <label><input type=radio name='fuel-switching' value='no-fuel-switch' checked> No </label>
+          <label><input type=radio name='fuel-switching' value='yes-fuel-switch'> Yes </label>
+        </div>
+        <div id='ecm-fuel-type'>
+        </div>
+      </div>
+
+      <div>
+        <label>Notes 
+          <textarea name='ecm-notes' placeholder='Any additional notes or information can be provided here.'></textarea>
+        </label>
       </div>
 
     </form>
