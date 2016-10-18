@@ -5,8 +5,8 @@ $(document).ready(function(){
   $("input[name=cz]").on("click", function() {
     cz_sel = checkedList("cz");
 
-    // Update performance fields when the selections change (the function
-    // takes care of whether the update is needed)
+    // Update performance fields when the selections change
+    // (the function takes care of whether the update is needed)
     cplFieldGenerator($("input[name=perf-spec-type]:checked").val(), "#perf-spec", "perf", "number");
     updateSourceFields("#perf-source", "perf");
   });
@@ -16,20 +16,24 @@ $(document).ready(function(){
   $("input[name=res-type]").on("click", function() {
     res_sel = checkedList("res-type");
 
-    // Update performance fields when the selections change (the function
-    // takes care of whether the update is needed)
+    // Update performance and lifetime fields when the selections change
+    // (the function takes care of whether the update is needed)
     cplFieldGenerator($("input[name=perf-spec-type]:checked").val(), "#perf-spec", "perf", "number");
+    cplFieldGenerator($("input[name=life-spec-type]:checked").val(), "#life-spec", "life", "number");
     updateSourceFields("#perf-source", "perf");
+    updateSourceFields("#life-source", "life");
   });
 
   var com_sel = [];
   $("input[name=com-type]").on("click", function() {
     com_sel = checkedList("com-type");
 
-    // Update performance fields when the selections change (the function
-    // takes care of whether the update is needed)
+    // Update performance and lifetime fields when the selections change
+    // (the function takes care of whether the update is needed)
     cplFieldGenerator($("input[name=perf-spec-type]:checked").val(), "#perf-spec", "perf", "number");
+    cplFieldGenerator($("input[name=life-spec-type]:checked").val(), "#life-spec", "life", "number");
     updateSourceFields("#perf-source", "perf");
+    updateSourceFields("#life-source", "life");
   });
 
 
@@ -284,6 +288,75 @@ $(document).ready(function(){
   // If selection option is changed, check for selection option and
   // update the HTML appropriately
   $("input[name=perf-source-type]").change(function(){ updateSourceFields("#perf-source", "perf"); });
+
+
+
+  ///////////////////////////////////////////////////////////////////////////
+  // LIFETIME
+  ///////////////////////////////////////////////////////////////////////////
+
+  // Define HTML content for unitary value input
+  var life_unitary = "<label>Value <input type='number' class='sm-text-input' name='life-unitary'></label>"
+
+  // On page load, add default lifetime field (single value) and check
+  // the appropriate radio button
+  $("input[name=life-spec-type][value=spec-unitary]").prop("checked", true);
+  $("#life-spec").append(life_unitary);
+
+  // Update lifetime field based on climate zone and building type selection
+  // Update lifetime source field if appropriate
+  $("input[name=life-spec-type]").change(function(){
+    // Obtain the lifetime type specified
+    var life_spec_type = $("input[name=life-spec-type]:checked").val();
+
+    // Clear contents of field
+    $("#life-spec").empty();
+
+    // Update contents of DOM in the appropriate field based on the selection
+    if (life_spec_type === "spec-unitary"){
+      $("#life-spec").append(life_unitary);
+    }
+    else if (life_spec_type === "spec-by-prob") {
+      $("#life-spec").append(configProbDropdown("life"));
+    }
+    else {
+      cplFieldGenerator(life_spec_type, "#life-spec", "life", "number");
+    }
+
+    // Update lifetime source data field
+    updateSourceFields("#life-source", "life");
+  });
+
+  ///////////////////////////////////////////////////////////////////
+  // DISTRIBUTION TYPE SELECTION
+
+  // Respond to distribution type selection
+  $(document).on("change", "select[name=life-distro]", function(){
+    // Clear existing entries in the area
+    $("#life-prob-params").remove();
+
+    // Get the dropdown menu selection
+    var life_distro_type = $("select[name=life-distro] option:selected").val();
+
+    // Call function to determine parameter names and add appropriate
+    // fields to the DOM to specify the distribution parameters
+    probFieldGenerator(life_distro_type, "life");
+  });
+
+  ///////////////////////////////////////////////////////////////////
+  // SOURCES
+
+  // Define HTML content for single source option
+  var single_source = "<label>Source <input type='text' name='single-source'></label>";
+
+  // On page load, add default source field (single value) and check
+  // the appropriate radio button
+  $("input[name=life-source-type][value=single]").prop("checked", true);
+  $("#life-source").append(single_source);
+
+  // If selection option is changed, check for selection option and
+  // update the HTML appropriately
+  $("input[name=life-source-type]").change(function(){ updateSourceFields("#life-source", "life"); });
 
 
 
